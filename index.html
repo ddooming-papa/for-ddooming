@@ -7,6 +7,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@300;400;700&family=Nanum+Pen+Script&family=Gowun+Dodum&family=Single+Day&display=swap" rel="stylesheet">
+
+<!-- AOS (Animate On Scroll) Library -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
 <style>
   * {
     margin: 0;
@@ -27,6 +31,7 @@
     --gold: #D4A574;
     --shadow-soft: 0 4px 20px rgba(232, 143, 160, 0.15);
     --shadow-card: 0 8px 30px rgba(184, 106, 124, 0.12);
+    --shadow-polaroid: 0 8px 25px rgba(0, 0, 0, 0.15);
   }
 
   body {
@@ -42,7 +47,6 @@
     min-height: 100vh;
   }
 
-  /* ============ BGM Button ============ */
   .bgm-button {
     position: fixed;
     top: 20px;
@@ -76,7 +80,6 @@
     to { transform: rotate(360deg); }
   }
 
-  /* ============ Hero Section ============ */
   .hero {
     min-height: 100vh;
     display: flex;
@@ -181,7 +184,6 @@
     50% { transform: translateY(-10px); }
   }
 
-  /* ============ Section Common ============ */
   section {
     max-width: 900px;
     margin: 0 auto;
@@ -205,7 +207,6 @@
     margin-bottom: 2.5rem;
   }
 
-  /* ============ Countdown Section ============ */
   .countdown-card {
     background: white;
     border-radius: 30px;
@@ -269,7 +270,6 @@
     margin-top: 4px;
   }
 
-  /* ============ Video Letter Section ============ */
   .video-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -297,12 +297,49 @@
     transform: translateY(-5px);
   }
 
+  /* 특별한 영상 카드 (엄마에게 보내는 선물) */
+  .video-card.special {
+    background: linear-gradient(135deg, #FFE8EC, #FFF6EE);
+    border: 2px solid var(--bg-pink);
+    position: relative;
+  }
+
+  .video-card.special::before {
+    content: '🎁 SPECIAL';
+    position: absolute;
+    top: -12px;
+    right: 20px;
+    background: var(--pink-deep);
+    color: white;
+    font-family: 'Nanum Pen Script', cursive;
+    font-size: 14px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+  }
+
   .video-card-label {
     font-family: 'Nanum Pen Script', cursive;
     font-size: 22px;
     text-align: center;
     margin-bottom: 0.8rem;
     color: var(--pink-text);
+  }
+
+  .video-card.special .video-card-label {
+    font-size: 24px;
+    color: var(--pink-deep);
+    font-weight: 700;
+  }
+
+  .video-card-subtitle {
+    font-family: 'Gaegu', cursive;
+    font-size: 14px;
+    text-align: center;
+    color: var(--brown-text);
+    margin-top: -8px;
+    margin-bottom: 12px;
+    opacity: 0.8;
   }
 
   .video-wrap {
@@ -320,66 +357,60 @@
     display: block;
   }
 
-  .video-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    color: white;
-    font-family: 'Gaegu', cursive;
-  }
-
-  .video-placeholder-icon {
-    font-size: 48px;
-  }
-
-  .video-placeholder-text {
-    font-size: 14px;
-    opacity: 0.9;
-  }
-
-  /* ============ Photo Gallery ============ */
-  .gallery-grid {
+  /* ===== POLAROID GALLERY ===== */
+  .polaroid-gallery {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    gap: 2.5rem 1rem;
+    padding: 2rem 0.5rem;
   }
 
   @media (min-width: 600px) {
-    .gallery-grid {
+    .polaroid-gallery {
       grid-template-columns: repeat(3, 1fr);
+      gap: 3rem 1.5rem;
     }
   }
 
-  .gallery-item {
+  .polaroid {
+    background: white;
+    padding: 12px 12px 50px;
+    box-shadow: var(--shadow-polaroid);
+    border-radius: 3px;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    cursor: pointer;
+    position: relative;
+  }
+
+  .polaroid:nth-child(1) { transform: rotate(-4deg); }
+  .polaroid:nth-child(2) { transform: rotate(3deg); margin-top: 1rem; }
+  .polaroid:nth-child(3) { transform: rotate(-2deg); }
+  .polaroid:nth-child(4) { transform: rotate(5deg); margin-top: 0.5rem; }
+  .polaroid:nth-child(5) { transform: rotate(-3deg); }
+  .polaroid:nth-child(6) { transform: rotate(2deg); margin-top: 1rem; }
+
+  .polaroid:hover {
+    transform: rotate(0deg) scale(1.08) translateY(-8px);
+    z-index: 10;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+  }
+
+  .polaroid-photo {
     aspect-ratio: 1;
-    background: var(--bg-pink-soft);
-    border-radius: 20px;
+    background: linear-gradient(135deg, var(--bg-pink-soft), var(--bg-pink));
+    border-radius: 2px;
     overflow: hidden;
     position: relative;
-    cursor: pointer;
-    transition: transform 0.3s;
-    box-shadow: var(--shadow-soft);
   }
 
-  .gallery-item:hover {
-    transform: scale(1.03) rotate(-1deg);
-  }
-
-  .gallery-item:nth-child(even):hover {
-    transform: scale(1.03) rotate(1deg);
-  }
-
-  .gallery-item img {
+  .polaroid-photo img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
   }
 
-  .gallery-placeholder {
+  .polaroid-placeholder {
     width: 100%;
     height: 100%;
     display: flex;
@@ -389,18 +420,48 @@
     color: var(--pink-deep);
   }
 
-  .gallery-placeholder-icon {
+  .polaroid-placeholder-icon {
     font-size: 36px;
     margin-bottom: 4px;
   }
 
-  .gallery-placeholder-text {
+  .polaroid-placeholder-text {
     font-family: 'Gaegu', cursive;
-    font-size: 12px;
+    font-size: 11px;
     color: var(--pink-text);
   }
 
-  /* ============ Timeline Section ============ */
+  .polaroid-caption {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    text-align: center;
+    font-family: 'Nanum Pen Script', cursive;
+    font-size: 18px;
+    color: var(--brown-deep);
+    line-height: 1.2;
+  }
+
+  .polaroid::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-3deg);
+    width: 50px;
+    height: 16px;
+    background: rgba(255, 212, 221, 0.6);
+    border-radius: 2px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  .polaroid:nth-child(2)::before { background: rgba(250, 199, 117, 0.6); transform: translateX(-50%) rotate(4deg); }
+  .polaroid:nth-child(3)::before { background: rgba(159, 225, 203, 0.6); transform: translateX(-50%) rotate(-5deg); }
+  .polaroid:nth-child(4)::before { background: rgba(244, 192, 209, 0.6); transform: translateX(-50%) rotate(2deg); }
+  .polaroid:nth-child(5)::before { background: rgba(206, 203, 246, 0.6); transform: translateX(-50%) rotate(-3deg); }
+  .polaroid:nth-child(6)::before { background: rgba(245, 196, 179, 0.6); transform: translateX(-50%) rotate(5deg); }
+
   .timeline {
     position: relative;
     padding-left: 30px;
@@ -458,7 +519,6 @@
     color: var(--brown-text);
   }
 
-  /* ============ Letter Section ============ */
   .letter-card {
     background: white;
     border-radius: 24px;
@@ -481,7 +541,6 @@
     margin-top: 1rem;
   }
 
-  /* ============ Footer ============ */
   footer {
     text-align: center;
     padding: 3rem 1.5rem 2rem;
@@ -496,7 +555,6 @@
     animation: heartbeat 1.5s ease-in-out infinite;
   }
 
-  /* ============ Balloons ============ */
   #balloon-container {
     position: fixed;
     top: 0;
@@ -546,19 +604,6 @@
     transform: translateY(-2px);
   }
 
-  /* ============ Reveal animation ============ */
-  .reveal {
-    opacity: 0;
-    transform: translateY(40px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
-  }
-
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* ============ Audio (hidden) ============ */
   audio {
     display: none;
   }
@@ -566,7 +611,6 @@
 </head>
 <body>
 
-<!-- BGM Button -->
 <button class="bgm-button" id="bgmBtn" aria-label="배경음악 재생">
   <span id="bgmIcon">🎵</span>
 </button>
@@ -574,10 +618,8 @@
   <source src="bgm.mp3" type="audio/mpeg">
 </audio>
 
-<!-- Balloon container -->
 <div id="balloon-container"></div>
 
-<!-- ============ HERO ============ -->
 <section class="hero">
   <span class="hero-decoration">🎈</span>
   <span class="hero-decoration">🌸</span>
@@ -591,43 +633,41 @@
   <div class="scroll-down">↓ scroll down ↓</div>
 </section>
 
-<!-- ============ COUNTDOWN ============ -->
-<section class="reveal">
-  <p class="section-label">SECTION 01</p>
-  <h2 class="section-title">우리 뚜밍 생일까지</h2>
+<section>
+  <p class="section-label" data-aos="fade-up">SECTION 01</p>
+  <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">우리 뚜밍 생일까지</h2>
 
-  <div class="countdown-card">
+  <div class="countdown-card" data-aos="zoom-in" data-aos-delay="200">
     <p class="countdown-label">2026년 6월 8일까지 남은 시간 ♡</p>
     <div class="countdown-grid">
-      <div class="countdown-item">
+      <div class="countdown-item" data-aos="flip-left" data-aos-delay="300">
         <div class="countdown-number" id="cd-days">--</div>
         <div class="countdown-unit">일</div>
       </div>
-      <div class="countdown-item">
+      <div class="countdown-item" data-aos="flip-left" data-aos-delay="400">
         <div class="countdown-number" id="cd-hours">--</div>
         <div class="countdown-unit">시간</div>
       </div>
-      <div class="countdown-item">
+      <div class="countdown-item" data-aos="flip-left" data-aos-delay="500">
         <div class="countdown-number" id="cd-mins">--</div>
         <div class="countdown-unit">분</div>
       </div>
-      <div class="countdown-item">
+      <div class="countdown-item" data-aos="flip-left" data-aos-delay="600">
         <div class="countdown-number" id="cd-secs">--</div>
         <div class="countdown-unit">초</div>
       </div>
     </div>
   </div>
 
-  <button class="balloon-trigger" onclick="releaseBalloons()">🎈 풍선 날리기 🎈</button>
+  <button class="balloon-trigger" onclick="releaseBalloons()" data-aos="fade-up" data-aos-delay="700">🎈 풍선 날리기 🎈</button>
 </section>
 
-<!-- ============ VIDEO LETTERS ============ -->
-<section class="reveal">
-  <p class="section-label">SECTION 02</p>
-  <h2 class="section-title">우리 가족 영상편지 💌</h2>
+<section>
+  <p class="section-label" data-aos="fade-up">SECTION 02</p>
+  <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">우리 가족 영상편지 💌</h2>
 
   <div class="video-grid">
-    <div class="video-card">
+    <div class="video-card" data-aos="fade-right" data-aos-delay="200">
       <div class="video-card-label">엄마가 뚜밍에게 ♡</div>
       <div class="video-wrap">
         <video controls poster="">
@@ -636,7 +676,7 @@
       </div>
     </div>
 
-    <div class="video-card">
+    <div class="video-card" data-aos="fade-left" data-aos-delay="300">
       <div class="video-card-label">아빠가 뚜밍에게 ♡</div>
       <div class="video-wrap">
         <video controls poster="">
@@ -645,7 +685,7 @@
       </div>
     </div>
 
-    <div class="video-card full">
+    <div class="video-card full" data-aos="zoom-in-up" data-aos-delay="400">
       <div class="video-card-label">우리 뚜밍의 한마디 🍼</div>
       <div class="video-wrap">
         <video controls poster="">
@@ -653,87 +693,120 @@
         </video>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- ============ GALLERY ============ -->
-<section class="reveal">
-  <p class="section-label">SECTION 03</p>
-  <h2 class="section-title">우리 가족 추억 갤러리</h2>
-
-  <div class="gallery-grid">
-    <div class="gallery-item">
-      <img src="photo1.jpg" alt="가족사진" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-      <div class="gallery-placeholder" style="display:none;">
-        <div class="gallery-placeholder-icon">👶</div>
-        <div class="gallery-placeholder-text">photo1.jpg</div>
-      </div>
-    </div>
-    <div class="gallery-item">
-      <img src="photo2.jpg" alt="가족사진" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-      <div class="gallery-placeholder" style="display:none;">
-        <div class="gallery-placeholder-icon">🎂</div>
-        <div class="gallery-placeholder-text">photo2.jpg</div>
-      </div>
-    </div>
-    <div class="gallery-item">
-      <img src="photo3.jpg" alt="가족사진" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-      <div class="gallery-placeholder" style="display:none;">
-        <div class="gallery-placeholder-icon">🌸</div>
-        <div class="gallery-placeholder-text">photo3.jpg</div>
-      </div>
-    </div>
-    <div class="gallery-item">
-      <img src="photo4.jpg" alt="가족사진" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-      <div class="gallery-placeholder" style="display:none;">
-        <div class="gallery-placeholder-icon">🏖️</div>
-        <div class="gallery-placeholder-text">photo4.jpg</div>
-      </div>
-    </div>
-    <div class="gallery-item">
-      <img src="photo5.jpg" alt="가족사진" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-      <div class="gallery-placeholder" style="display:none;">
-        <div class="gallery-placeholder-icon">🎄</div>
-        <div class="gallery-placeholder-text">photo5.jpg</div>
-      </div>
-    </div>
-    <div class="gallery-item">
-      <img src="photo6.jpg" alt="가족사진" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-      <div class="gallery-placeholder" style="display:none;">
-        <div class="gallery-placeholder-icon">🧸</div>
-        <div class="gallery-placeholder-text">photo6.jpg</div>
+    <!-- ★★★ 엄마에게 보내는 깜짝 선물 영상 ★★★ -->
+    <!-- 제목 수정하려면 아래 video-card-label 안의 텍스트 바꾸세요 -->
+    <div class="video-card special full" data-aos="zoom-in" data-aos-delay="500">
+      <div class="video-card-label">수민이를 키워준 엄마에게 ♡</div>
+      <div class="video-card-subtitle">- 우리 모두가 전하는 마음 -</div>
+      <div class="video-wrap">
+        <video controls poster="">
+          <source src="letter-mom-gift.mp4" type="video/mp4">
+        </video>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ TIMELINE ============ -->
-<section class="reveal">
-  <p class="section-label">SECTION 04</p>
-  <h2 class="section-title">뚜밍과 함께한 순간들</h2>
+<section>
+  <p class="section-label" data-aos="fade-up">SECTION 03</p>
+  <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">우리 가족 추억 갤러리</h2>
+
+  <div class="polaroid-gallery">
+    <div class="polaroid" data-aos="fade-up" data-aos-delay="100">
+      <div class="polaroid-photo">
+        <img src="photo1.jpg" alt="가족사진" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="polaroid-placeholder" style="display:none;">
+          <div class="polaroid-placeholder-icon">👶</div>
+          <div class="polaroid-placeholder-text">photo1.jpg</div>
+        </div>
+      </div>
+      <div class="polaroid-caption">우리 뚜밍 ♡</div>
+    </div>
+
+    <div class="polaroid" data-aos="fade-up" data-aos-delay="200">
+      <div class="polaroid-photo">
+        <img src="photo2.jpg" alt="가족사진" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="polaroid-placeholder" style="display:none;">
+          <div class="polaroid-placeholder-icon">🎂</div>
+          <div class="polaroid-placeholder-text">photo2.jpg</div>
+        </div>
+      </div>
+      <div class="polaroid-caption">첫 번째 생일 🎂</div>
+    </div>
+
+    <div class="polaroid" data-aos="fade-up" data-aos-delay="300">
+      <div class="polaroid-photo">
+        <img src="photo3.jpg" alt="가족사진" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="polaroid-placeholder" style="display:none;">
+          <div class="polaroid-placeholder-icon">🌸</div>
+          <div class="polaroid-placeholder-text">photo3.jpg</div>
+        </div>
+      </div>
+      <div class="polaroid-caption">봄날의 뚜밍 🌸</div>
+    </div>
+
+    <div class="polaroid" data-aos="fade-up" data-aos-delay="400">
+      <div class="polaroid-photo">
+        <img src="photo4.jpg" alt="가족사진" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="polaroid-placeholder" style="display:none;">
+          <div class="polaroid-placeholder-icon">🏖️</div>
+          <div class="polaroid-placeholder-text">photo4.jpg</div>
+        </div>
+      </div>
+      <div class="polaroid-caption">여름 추억 🏖️</div>
+    </div>
+
+    <div class="polaroid" data-aos="fade-up" data-aos-delay="500">
+      <div class="polaroid-photo">
+        <img src="photo5.jpg" alt="가족사진" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="polaroid-placeholder" style="display:none;">
+          <div class="polaroid-placeholder-icon">🎄</div>
+          <div class="polaroid-placeholder-text">photo5.jpg</div>
+        </div>
+      </div>
+      <div class="polaroid-caption">우리집 크리스마스 🎄</div>
+    </div>
+
+    <div class="polaroid" data-aos="fade-up" data-aos-delay="600">
+      <div class="polaroid-photo">
+        <img src="photo6.jpg" alt="가족사진" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="polaroid-placeholder" style="display:none;">
+          <div class="polaroid-placeholder-icon">🧸</div>
+          <div class="polaroid-placeholder-text">photo6.jpg</div>
+        </div>
+      </div>
+      <div class="polaroid-caption">우리 가족 ♡</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="section-label" data-aos="fade-up">SECTION 04</p>
+  <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">뚜밍과 함께한 순간들</h2>
 
   <div class="timeline">
-    <div class="timeline-item">
+    <div class="timeline-item" data-aos="fade-right" data-aos-delay="100">
       <div class="timeline-date">2024. 06. 08</div>
       <div class="timeline-title">🌸 뚜밍이 우리에게 온 날</div>
       <div class="timeline-desc">세상에서 가장 작고 소중한 우리 아기, 처음 만나던 그 순간</div>
     </div>
-    <div class="timeline-item">
+    <div class="timeline-item" data-aos="fade-left" data-aos-delay="200">
       <div class="timeline-date">2024. 12 ~</div>
       <div class="timeline-title">👣 첫 뒤집기, 첫 옹알이</div>
       <div class="timeline-desc">하루하루가 처음, 매일이 기적이었던 시간들</div>
     </div>
-    <div class="timeline-item">
+    <div class="timeline-item" data-aos="fade-right" data-aos-delay="300">
       <div class="timeline-date">2025. 06</div>
       <div class="timeline-title">🎂 뚜밍이의 첫 번째 생일</div>
       <div class="timeline-desc">어느새 한 살! 첫 돌잔치의 행복한 추억</div>
     </div>
-    <div class="timeline-item">
+    <div class="timeline-item" data-aos="fade-left" data-aos-delay="400">
       <div class="timeline-date">2025 ~</div>
       <div class="timeline-title">🚶 첫 걸음마, 첫 단어</div>
       <div class="timeline-desc">"엄마", "아빠"를 부르던 그 떨림</div>
     </div>
-    <div class="timeline-item">
+    <div class="timeline-item" data-aos="zoom-in" data-aos-delay="500">
       <div class="timeline-date">2026. 06. 08</div>
       <div class="timeline-title">✨ 뚜밍이의 두 번째 생일</div>
       <div class="timeline-desc">우리 가족이 함께한 가장 빛나는 2년, 이제 세 살이 되는 우리 공주님</div>
@@ -741,12 +814,11 @@
   </div>
 </section>
 
-<!-- ============ LETTER ============ -->
-<section class="reveal">
-  <p class="section-label">SECTION 05</p>
-  <h2 class="section-title">뚜밍에게 보내는 편지</h2>
+<section>
+  <p class="section-label" data-aos="fade-up">SECTION 05</p>
+  <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">뚜밍에게 보내는 편지</h2>
 
-  <div class="letter-card">
+  <div class="letter-card" data-aos="zoom-in" data-aos-delay="200">
     사랑하는 우리 뚜밍에게,<br><br>
     네가 우리에게 온 그날부터 우리 가족은 진짜 가족이 되었어.<br>
     매일 아침 너의 웃음으로 시작하는 하루, 매일 밤 너의 잠든 얼굴로 마무리하는 하루.<br><br>
@@ -758,14 +830,22 @@
   </div>
 </section>
 
-<!-- ============ FOOTER ============ -->
-<footer>
+<footer data-aos="fade-up">
   made with <span class="heart">♥</span> by 영현정&뚜밍 family<br>
   <span style="font-size: 14px; opacity: 0.7;">2024.06.08 ~ forever</span>
 </footer>
 
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
 <script>
-  // ============ Typing Effect ============
+  AOS.init({
+    duration: 800,
+    easing: 'ease-out-cubic',
+    once: false,
+    mirror: false,
+    offset: 80
+  });
+
   const typingMessages = [
     '영현정&뚜밍, 세상에서 가장 따뜻한 우리집 ♡',
     '우리 뚜밍이의 세 번째 봄을 축하해 🌸',
@@ -804,7 +884,6 @@
   
   setTimeout(typeMessage, 1500);
 
-  // ============ Countdown ============
   const targetDate = new Date('2026-06-08T00:00:00').getTime();
 
   function updateCountdown() {
@@ -833,7 +912,6 @@
   updateCountdown();
   setInterval(updateCountdown, 1000);
 
-  // ============ BGM Toggle ============
   const bgm = document.getElementById('bgm');
   const bgmBtn = document.getElementById('bgmBtn');
   const bgmIcon = document.getElementById('bgmIcon');
@@ -856,7 +934,6 @@
     }
   });
 
-  // ============ Balloons ============
   const balloonEmojis = ['🎈', '🎀', '💖', '🌸', '✨', '🧸', '🎂', '💕'];
 
   function releaseBalloons(count = 25) {
@@ -877,22 +954,8 @@
     }
   }
 
-  // 페이지 로드시 한번 풍선 날리기
   setTimeout(() => releaseBalloons(15), 1000);
-
-  // 5분마다 자동으로 풍선 한번씩
   setInterval(() => releaseBalloons(8), 300000);
-
-  // ============ Scroll Reveal ============
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
-    });
-  }, { threshold: 0.1 });
-
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 </script>
 
 </body>
