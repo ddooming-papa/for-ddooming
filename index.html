@@ -1055,7 +1055,7 @@
   <div class="letter-card" data-aos="zoom-in" data-aos-delay="200">
     <button class="letter-replay" id="letterReplay" onclick="restartLetterTyping()">↻ 다시 보기</button>
     <span id="letter-typing"></span><span class="letter-cursor" id="letterCursor"></span>
-    <div class="signature" id="letterSignature">- 영현 & 현정 -</div>
+    <div class="signature" id="letterSignature">- 언제나 너의 편 엄마아빠가 -</div>
   </div>
 </section>
 
@@ -1320,21 +1320,46 @@
   const bgmBtn = document.getElementById('bgmBtn');
   const bgmIcon = document.getElementById('bgmIcon');
   let isPlaying = false;
-  bgmBtn.addEventListener('click', () => {
-    if (isPlaying) {
-      bgm.pause();
-      bgmBtn.classList.remove('playing');
-      bgmIcon.textContent = '🎵';
-      isPlaying = false;
-    } else {
-      bgm.play().then(() => {
-        bgmBtn.classList.add('playing');
-        bgmIcon.textContent = '🎶';
-        isPlaying = true;
-      }).catch(err => {
-        alert('bgm.mp3 파일이 없거나 재생할 수 없어요.\n같은 폴더에 bgm.mp3 파일을 넣어주세요!');
-      });
-    }
+
+  function playBgm() {
+    bgm.play().then(() => {
+      bgmBtn.classList.add('playing');
+      bgmIcon.textContent = '🎶';
+      isPlaying = true;
+    }).catch(err => {
+      // 자동재생 차단됨 - 사용자 클릭 기다림
+    });
+  }
+
+  function pauseBgm() {
+    bgm.pause();
+    bgmBtn.classList.remove('playing');
+    bgmIcon.textContent = '🎵';
+    isPlaying = false;
+  }
+
+  // 1) 페이지 로드 시 자동재생 시도
+  bgm.volume = 0.5;
+  window.addEventListener('load', () => {
+    setTimeout(playBgm, 500);
+  });
+
+  // 2) 자동재생이 막히면, 첫 클릭/터치 때 음악 시작 (한 번만)
+  function startOnFirstInteraction() {
+    if (!isPlaying) playBgm();
+    document.removeEventListener('click', startOnFirstInteraction);
+    document.removeEventListener('touchstart', startOnFirstInteraction);
+    document.removeEventListener('keydown', startOnFirstInteraction);
+  }
+  document.addEventListener('click', startOnFirstInteraction);
+  document.addEventListener('touchstart', startOnFirstInteraction);
+  document.addEventListener('keydown', startOnFirstInteraction);
+
+  // 3) 🎵 버튼으로 켜고 끄기
+  bgmBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (isPlaying) pauseBgm();
+    else playBgm();
   });
 
   const balloonEmojis = ['🎈', '🎀', '💖', '🌸', '✨', '🧸', '🎂', '💕'];
@@ -1358,14 +1383,30 @@
   setInterval(() => releaseBalloons(8), 300000);
 
   /* ★★★★★ 편지 내용은 아래에서 수정하세요! ★★★★★ */
-  const letterText = `사랑하는 우리 뚜밍에게,
+  const letterText = `♡ 우리 예쁜 딸 수민이에게 ♡
 
-[이곳에 편지 내용을 직접 작성해주세요]
+안녕, 뚜밍아.
+너의 두 번째 생일을 엄마 아빠가 진심으로 축하해.
 
-엄마 아빠는 너의 모든 처음을 함께해서 너무 행복했어.
-앞으로도 너의 모든 순간을 함께할게.
+수민이가 우리에게 온 순간부터 지금까지, 엄마 아빠는 단 한 번도 행복하지 않은 적이 없었어.
 
-건강하고 사랑스럽게 자라줘서 고마워, 우리 뚜밍 ♡`;
+우리의 모든 관심과 사랑은 늘 수민이에게 향해 있었단다.
+
+숨 쉬고, 울고, 웃고, 잠들고, 잠에서 깨고, 응가를 하고, 넘어지고, 다시 일어서는 너의 모든 모습이 엄마 아빠에게는 행복이었어.
+
+하루하루 커가는 수민이를 보면서 대견하기도 하고, 한편으로는 마음이 아프기도 해.
+
+혹시 우리가 잘 못해준 건 없는지, 부족한 건 없었는지 늘 생각하게 되거든.
+
+하지만 엄마 아빠도 부모가 처음이라 아직 하나씩 배워가는 중이야.
+
+그러니 가끔 서툴더라도 이해해 주고, 앞으로도 함께 행복하게 걸어가자 😊
+
+항상 지금처럼 밝고 예쁘고 맑은 아이로 자라길 바랄게.
+
+언제 어디서나 수민이의 앞날을 위해 기도하고 응원할게.
+
+세상 그 누구보다 사랑해, 우리 딸 ♡`;
   /* ★★★★★ 편지 내용 끝 ★★★★★ */
 
   let letterTimer = null;
