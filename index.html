@@ -535,52 +535,36 @@
     display: block;
   }
 
-  .polaroid-gallery {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2.5rem 1rem;
-    padding: 2rem 0.5rem;
+  /* ============ SLIDESHOW GALLERY (NEW v5!) ============ */
+  .slideshow {
+    max-width: 600px;
+    margin: 0 auto;
   }
-  @media (min-width: 600px) {
-    .polaroid-gallery {
-      grid-template-columns: repeat(3, 1fr);
-      gap: 3rem 1.5rem;
-    }
-  }
-  .polaroid {
-    background: white;
-    padding: 12px 12px 50px;
-    box-shadow: var(--shadow-polaroid);
-    border-radius: 3px;
-    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    cursor: pointer;
+  .slideshow-main {
     position: relative;
-  }
-  .polaroid:nth-child(1) { transform: rotate(-4deg); }
-  .polaroid:nth-child(2) { transform: rotate(3deg); margin-top: 1rem; }
-  .polaroid:nth-child(3) { transform: rotate(-2deg); }
-  .polaroid:nth-child(4) { transform: rotate(5deg); margin-top: 0.5rem; }
-  .polaroid:nth-child(5) { transform: rotate(-3deg); }
-  .polaroid:nth-child(6) { transform: rotate(2deg); margin-top: 1rem; }
-  .polaroid:hover {
-    transform: rotate(0deg) scale(1.08) translateY(-8px);
-    z-index: 10;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
-  }
-  .polaroid-photo {
-    aspect-ratio: 1;
-    background: linear-gradient(135deg, var(--bg-pink-soft), var(--bg-pink));
-    border-radius: 2px;
+    aspect-ratio: 4/3;
+    border-radius: 24px;
     overflow: hidden;
-    position: relative;
+    box-shadow: var(--shadow-card);
+    background: linear-gradient(135deg, var(--bg-pink-soft), var(--bg-pink));
+    border: 4px solid white;
   }
-  .polaroid-photo img {
+  .slideshow-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  .slideshow-slide.active {
+    opacity: 1;
+  }
+  .slideshow-slide img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
   }
-  .polaroid-placeholder {
+  .slideshow-slide-placeholder {
     width: 100%;
     height: 100%;
     display: flex;
@@ -588,41 +572,134 @@
     align-items: center;
     justify-content: center;
     color: var(--pink-deep);
-  }
-  .polaroid-placeholder-icon { font-size: 36px; margin-bottom: 4px; }
-  .polaroid-placeholder-text {
     font-family: 'Gaegu', cursive;
-    font-size: 11px;
-    color: var(--pink-text);
   }
-  .polaroid-caption {
+  .slideshow-slide-placeholder .icon { font-size: 48px; margin-bottom: 8px; }
+
+  .slideshow-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: var(--pink-deep);
+    z-index: 3;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    transition: all 0.3s;
+  }
+  .slideshow-arrow:hover {
+    background: white;
+    transform: translateY(-50%) scale(1.1);
+  }
+  .slideshow-arrow.prev { left: 12px; }
+  .slideshow-arrow.next { right: 12px; }
+
+  .slideshow-counter {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(8px);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-family: 'Gaegu', cursive;
+    font-size: 13px;
+    z-index: 3;
+  }
+
+  .slideshow-play {
     position: absolute;
     bottom: 12px;
     left: 12px;
-    right: 12px;
-    text-align: center;
-    font-family: 'Nanum Pen Script', cursive;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px);
+    border: none;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 14px;
+    color: var(--pink-deep);
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .slideshow-dots {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 1.2rem;
+  }
+  .slideshow-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--bg-pink);
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+    padding: 0;
+  }
+  .slideshow-dot.active {
+    background: var(--pink-deep);
+    transform: scale(1.3);
+  }
+
+  .slideshow-thumbs {
+    display: flex;
+    gap: 8px;
+    margin-top: 1.2rem;
+    overflow-x: auto;
+    padding: 8px 4px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--bg-pink) transparent;
+  }
+  .slideshow-thumbs::-webkit-scrollbar { height: 6px; }
+  .slideshow-thumbs::-webkit-scrollbar-thumb { background: var(--bg-pink); border-radius: 3px; }
+  .slideshow-thumb {
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: all 0.3s;
+    opacity: 0.6;
+  }
+  .slideshow-thumb.active {
+    border-color: var(--pink-deep);
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  .slideshow-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .slideshow-thumb-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--bg-pink-soft), var(--bg-pink));
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 18px;
-    color: var(--brown-deep);
-    line-height: 1.2;
   }
-  .polaroid::before {
-    content: '';
-    position: absolute;
-    top: -8px;
-    left: 50%;
-    transform: translateX(-50%) rotate(-3deg);
-    width: 50px;
-    height: 16px;
-    background: rgba(255, 212, 221, 0.6);
-    border-radius: 2px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  }
-  .polaroid:nth-child(2)::before { background: rgba(250, 199, 117, 0.6); transform: translateX(-50%) rotate(4deg); }
-  .polaroid:nth-child(3)::before { background: rgba(159, 225, 203, 0.6); transform: translateX(-50%) rotate(-5deg); }
-  .polaroid:nth-child(4)::before { background: rgba(244, 192, 209, 0.6); transform: translateX(-50%) rotate(2deg); }
-  .polaroid:nth-child(5)::before { background: rgba(206, 203, 246, 0.6); transform: translateX(-50%) rotate(-3deg); }
-  .polaroid:nth-child(6)::before { background: rgba(245, 196, 179, 0.6); transform: translateX(-50%) rotate(5deg); }
 
   .timeline { position: relative; padding-left: 30px; }
   .timeline::before {
@@ -830,12 +907,6 @@
         <video autoplay loop muted playsinline poster="">
           <source src="avatar.mp4" type="video/mp4">
         </video>
-        <noscript>
-          <div class="avatar-placeholder">
-            <div class="avatar-placeholder-icon">👶</div>
-            <div class="avatar-placeholder-text">avatar.mp4</div>
-          </div>
-        </noscript>
       </div>
     </div>
   </div>
@@ -943,76 +1014,22 @@
   </div>
 </section>
 
+<!-- ============ SLIDESHOW GALLERY (NEW v5!) ============ -->
 <section>
   <p class="section-label" data-aos="fade-up">SECTION 03</p>
   <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">우리 가족 추억 갤러리</h2>
 
-  <div class="polaroid-gallery">
-    <div class="polaroid" data-aos="fade-up" data-aos-delay="100">
-      <div class="polaroid-photo">
-        <img src="photo1.jpg" alt="가족사진" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-        <div class="polaroid-placeholder" style="display:none;">
-          <div class="polaroid-placeholder-icon">👶</div>
-          <div class="polaroid-placeholder-text">photo1.jpg</div>
-        </div>
-      </div>
-      <div class="polaroid-caption">우리 뚜밍 ♡</div>
+  <div class="slideshow" data-aos="zoom-in" data-aos-delay="200">
+    <div class="slideshow-main" id="slideshowMain">
+      <!-- 슬라이드는 JS가 자동 생성 -->
+      <button class="slideshow-arrow prev" onclick="changeSlide(-1)" aria-label="이전">‹</button>
+      <button class="slideshow-arrow next" onclick="changeSlide(1)" aria-label="다음">›</button>
+      <button class="slideshow-play" id="playBtn" onclick="toggleAutoplay()" aria-label="재생/정지">⏸</button>
+      <div class="slideshow-counter"><span id="slideCurrent">1</span> / <span id="slideTotal">25</span></div>
     </div>
 
-    <div class="polaroid" data-aos="fade-up" data-aos-delay="200">
-      <div class="polaroid-photo">
-        <img src="photo2.jpg" alt="가족사진" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-        <div class="polaroid-placeholder" style="display:none;">
-          <div class="polaroid-placeholder-icon">🎂</div>
-          <div class="polaroid-placeholder-text">photo2.jpg</div>
-        </div>
-      </div>
-      <div class="polaroid-caption">첫 번째 생일 🎂</div>
-    </div>
-
-    <div class="polaroid" data-aos="fade-up" data-aos-delay="300">
-      <div class="polaroid-photo">
-        <img src="photo3.jpg" alt="가족사진" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-        <div class="polaroid-placeholder" style="display:none;">
-          <div class="polaroid-placeholder-icon">🌸</div>
-          <div class="polaroid-placeholder-text">photo3.jpg</div>
-        </div>
-      </div>
-      <div class="polaroid-caption">봄날의 뚜밍 🌸</div>
-    </div>
-
-    <div class="polaroid" data-aos="fade-up" data-aos-delay="400">
-      <div class="polaroid-photo">
-        <img src="photo4.jpg" alt="가족사진" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-        <div class="polaroid-placeholder" style="display:none;">
-          <div class="polaroid-placeholder-icon">🏖️</div>
-          <div class="polaroid-placeholder-text">photo4.jpg</div>
-        </div>
-      </div>
-      <div class="polaroid-caption">여름 추억 🏖️</div>
-    </div>
-
-    <div class="polaroid" data-aos="fade-up" data-aos-delay="500">
-      <div class="polaroid-photo">
-        <img src="photo5.jpg" alt="가족사진" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-        <div class="polaroid-placeholder" style="display:none;">
-          <div class="polaroid-placeholder-icon">🎄</div>
-          <div class="polaroid-placeholder-text">photo5.jpg</div>
-        </div>
-      </div>
-      <div class="polaroid-caption">우리집 크리스마스 🎄</div>
-    </div>
-
-    <div class="polaroid" data-aos="fade-up" data-aos-delay="600">
-      <div class="polaroid-photo">
-        <img src="photo6.jpg" alt="가족사진" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-        <div class="polaroid-placeholder" style="display:none;">
-          <div class="polaroid-placeholder-icon">🧸</div>
-          <div class="polaroid-placeholder-text">photo6.jpg</div>
-        </div>
-      </div>
-      <div class="polaroid-caption">우리 가족 ♡</div>
-    </div>
+    <div class="slideshow-dots" id="slideshowDots"></div>
+    <div class="slideshow-thumbs" id="slideshowThumbs"></div>
   </div>
 </section>
 
@@ -1089,18 +1106,15 @@
     offset: 80
   });
 
-  /* ★★★★★ 메인 타이핑 메시지 (3개 순환) ★★★★★ */
   const typingMessages = [
     '♡ 영현정&뚜밍 House ♡',
     '사랑스러운 우리 수민이의 두돌을 축하합니다',
     '언제나 지금처럼 이쁘고 밝은 수민이가 되기를 바랄게♡'
   ];
-
   const typingTarget = document.getElementById('typingTarget');
   let msgIndex = 0;
   let charIndex = 0;
   let isDeleting = false;
-
   function typeMessage() {
     const currentMsg = typingMessages[msgIndex];
     if (!isDeleting) {
@@ -1128,7 +1142,6 @@
 
   const targetDate = new Date('2026-06-08T00:00:00').getTime();
   const birthDate = new Date('2024-06-08T00:00:00').getTime();
-
   function updateCountdown() {
     const now = new Date().getTime();
     const diff = targetDate - now;
@@ -1162,7 +1175,6 @@
     const dDay = Math.max(0, Math.ceil(diffBday / (1000 * 60 * 60 * 24)));
     return { daysTotal, months, dDay };
   }
-
   function animateNumber(elementId, targetValue, duration = 1500) {
     const element = document.getElementById(elementId);
     const start = 0;
@@ -1178,7 +1190,6 @@
     }
     requestAnimationFrame(update);
   }
-
   let statsAnimated = false;
   const statsObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -1194,11 +1205,118 @@
   const firstStatCard = document.querySelector('.stat-card');
   if (firstStatCard) statsObserver.observe(firstStatCard);
 
+  /* ============ SLIDESHOW (NEW v5!) ============ */
+  const TOTAL_PHOTOS = 25;
+  // 사진별 캡션 (원하면 수정하세요!)
+  const photoCaptions = {
+    1: '우리 뚜밍 ♡', 3: '벚꽃 가족사진 🌸', 6: '바다에서 🏖️',
+    8: '가족사진 📸', 11: '크리스마스 🎄', 18: '공주님 뚜밍 👸',
+    25: '우리 가족 ♡'
+  };
+
+  const slideshowMain = document.getElementById('slideshowMain');
+  const slideshowDots = document.getElementById('slideshowDots');
+  const slideshowThumbs = document.getElementById('slideshowThumbs');
+  let currentSlide = 0;
+  let autoplayTimer = null;
+  let isAutoplay = true;
+
+  // 슬라이드, 점, 썸네일 생성
+  for (let i = 1; i <= TOTAL_PHOTOS; i++) {
+    // 슬라이드
+    const slide = document.createElement('div');
+    slide.className = 'slideshow-slide' + (i === 1 ? ' active' : '');
+    slide.innerHTML = `
+      <img src="photos/photo${i}.jpg" alt="가족사진 ${i}" loading="lazy"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="slideshow-slide-placeholder" style="display:none;">
+        <div class="icon">📷</div>
+        <div>photo${i}.jpg</div>
+      </div>`;
+    slideshowMain.insertBefore(slide, slideshowMain.querySelector('.slideshow-arrow'));
+
+    // 점
+    const dot = document.createElement('button');
+    dot.className = 'slideshow-dot' + (i === 1 ? ' active' : '');
+    dot.onclick = () => goToSlide(i - 1);
+    slideshowDots.appendChild(dot);
+
+    // 썸네일
+    const thumb = document.createElement('div');
+    thumb.className = 'slideshow-thumb' + (i === 1 ? ' active' : '');
+    thumb.onclick = () => goToSlide(i - 1);
+    thumb.innerHTML = `
+      <img src="photos/photo${i}.jpg" alt="썸네일 ${i}" loading="lazy"
+        onerror="this.parentElement.innerHTML='<div class=\\'slideshow-thumb-placeholder\\'>📷</div>';">`;
+    slideshowThumbs.appendChild(thumb);
+  }
+
+  document.getElementById('slideTotal').textContent = TOTAL_PHOTOS;
+
+  const slides = slideshowMain.querySelectorAll('.slideshow-slide');
+  const dots = slideshowDots.querySelectorAll('.slideshow-dot');
+  const thumbs = slideshowThumbs.querySelectorAll('.slideshow-thumb');
+
+  function updateSlide() {
+    slides.forEach((s, i) => s.classList.toggle('active', i === currentSlide));
+    dots.forEach((d, i) => d.classList.toggle('active', i === currentSlide));
+    thumbs.forEach((t, i) => t.classList.toggle('active', i === currentSlide));
+    document.getElementById('slideCurrent').textContent = currentSlide + 1;
+    // 활성 썸네일이 보이도록 스크롤
+    thumbs[currentSlide].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  }
+
+  function changeSlide(dir) {
+    currentSlide = (currentSlide + dir + TOTAL_PHOTOS) % TOTAL_PHOTOS;
+    updateSlide();
+    resetAutoplay();
+  }
+
+  function goToSlide(idx) {
+    currentSlide = idx;
+    updateSlide();
+    resetAutoplay();
+  }
+
+  function startAutoplay() {
+    autoplayTimer = setInterval(() => {
+      currentSlide = (currentSlide + 1) % TOTAL_PHOTOS;
+      updateSlide();
+    }, 3500);
+    isAutoplay = true;
+    document.getElementById('playBtn').textContent = '⏸';
+  }
+
+  function stopAutoplay() {
+    clearInterval(autoplayTimer);
+    isAutoplay = false;
+    document.getElementById('playBtn').textContent = '▶';
+  }
+
+  function resetAutoplay() {
+    if (isAutoplay) {
+      clearInterval(autoplayTimer);
+      startAutoplay();
+    }
+  }
+
+  function toggleAutoplay() {
+    if (isAutoplay) stopAutoplay();
+    else startAutoplay();
+  }
+
+  startAutoplay();
+
+  // 키보드 좌우 화살표 지원
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') changeSlide(-1);
+    if (e.key === 'ArrowRight') changeSlide(1);
+  });
+
   const bgm = document.getElementById('bgm');
   const bgmBtn = document.getElementById('bgmBtn');
   const bgmIcon = document.getElementById('bgmIcon');
   let isPlaying = false;
-
   bgmBtn.addEventListener('click', () => {
     if (isPlaying) {
       bgm.pause();
@@ -1249,7 +1367,6 @@
 
   let letterTimer = null;
   let letterAnimated = false;
-
   function startLetterTyping() {
     const target = document.getElementById('letter-typing');
     const cursor = document.getElementById('letterCursor');
@@ -1263,11 +1380,8 @@
     function type() {
       if (i < letterText.length) {
         const char = letterText[i];
-        if (char === '\n') {
-          target.innerHTML += '<br>';
-        } else {
-          target.innerHTML += char;
-        }
+        if (char === '\n') target.innerHTML += '<br>';
+        else target.innerHTML += char;
         i++;
         const delay = char === '\n' ? 200 : (char === '.' || char === ',' ? 200 : 70);
         letterTimer = setTimeout(type, delay);
