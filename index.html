@@ -1262,8 +1262,14 @@
     dots.forEach((d, i) => d.classList.toggle('active', i === currentSlide));
     thumbs.forEach((t, i) => t.classList.toggle('active', i === currentSlide));
     document.getElementById('slideCurrent').textContent = currentSlide + 1;
-    // 활성 썸네일이 보이도록 스크롤
-    thumbs[currentSlide].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    // 활성 썸네일이 보이도록 썸네일 줄 내부에서만 가로 스크롤 (페이지 스크롤에는 영향 X)
+    const activeThumb = thumbs[currentSlide];
+    const container = slideshowThumbs;
+    const thumbLeft = activeThumb.offsetLeft;
+    const thumbWidth = activeThumb.offsetWidth;
+    const containerWidth = container.clientWidth;
+    const targetScroll = thumbLeft - (containerWidth / 2) + (thumbWidth / 2);
+    container.scrollTo({ left: targetScroll, behavior: 'smooth' });
   }
 
   function changeSlide(dir) {
