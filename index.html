@@ -1019,7 +1019,7 @@
   <p class="section-label" data-aos="fade-up">SECTION 03</p>
   <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">우리 가족 추억 갤러리</h2>
 
-  <div class="slideshow" data-aos="zoom-in" data-aos-delay="200">
+  <div class="slideshow">
     <div class="slideshow-main" id="slideshowMain">
       <!-- 슬라이드는 JS가 자동 생성 -->
       <button class="slideshow-arrow prev" onclick="changeSlide(-1)" aria-label="이전">‹</button>
@@ -1101,9 +1101,10 @@
   AOS.init({
     duration: 800,
     easing: 'ease-out-cubic',
-    once: false,
+    once: true,
     mirror: false,
-    offset: 80
+    offset: 80,
+    disableMutationObserver: true
   });
 
   const typingMessages = [
