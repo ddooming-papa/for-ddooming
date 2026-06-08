@@ -976,24 +976,6 @@
 
   <div class="video-grid">
     <div class="video-card" data-aos="fade-right" data-aos-delay="200">
-      <div class="video-card-label">엄마가 뚜밍에게 ♡</div>
-      <div class="video-wrap">
-        <video controls poster="">
-          <source src="letter-mom.mp4" type="video/mp4">
-        </video>
-      </div>
-    </div>
-
-    <div class="video-card" data-aos="fade-left" data-aos-delay="300">
-      <div class="video-card-label">아빠가 뚜밍에게 ♡</div>
-      <div class="video-wrap">
-        <video controls poster="">
-          <source src="letter-dad.mp4" type="video/mp4">
-        </video>
-      </div>
-    </div>
-
-    <div class="video-card full" data-aos="zoom-in-up" data-aos-delay="400">
       <div class="video-card-label">우리 뚜밍의 한마디 🍼</div>
       <div class="video-wrap">
         <video controls poster="">
@@ -1002,7 +984,7 @@
       </div>
     </div>
 
-    <div class="video-card special full" data-aos="zoom-in" data-aos-delay="500">
+    <div class="video-card special" data-aos="fade-left" data-aos-delay="300">
       <div class="video-card-label">수민이를 키워준 엄마에게 ♡</div>
       <div class="video-card-subtitle">- 우리 모두가 전하는 마음 -</div>
       <div class="video-wrap">
@@ -1263,14 +1245,15 @@
     dots.forEach((d, i) => d.classList.toggle('active', i === currentSlide));
     thumbs.forEach((t, i) => t.classList.toggle('active', i === currentSlide));
     document.getElementById('slideCurrent').textContent = currentSlide + 1;
-    // 활성 썸네일이 보이도록 썸네일 줄 내부에서만 가로 스크롤 (페이지 스크롤에는 영향 X)
+    // 활성 썸네일이 보이도록 썸네일 줄 내부에서만 가로 위치 조정
+    // scrollLeft 직접 할당(smooth 미사용)이라 페이지 스크롤에 절대 영향 없음
     const activeThumb = thumbs[currentSlide];
     const container = slideshowThumbs;
     const thumbLeft = activeThumb.offsetLeft;
     const thumbWidth = activeThumb.offsetWidth;
     const containerWidth = container.clientWidth;
     const targetScroll = thumbLeft - (containerWidth / 2) + (thumbWidth / 2);
-    container.scrollTo({ left: targetScroll, behavior: 'smooth' });
+    container.scrollLeft = targetScroll;
   }
 
   function changeSlide(dir) {
@@ -1286,6 +1269,7 @@
   }
 
   function startAutoplay() {
+    clearInterval(autoplayTimer);
     autoplayTimer = setInterval(() => {
       currentSlide = (currentSlide + 1) % TOTAL_PHOTOS;
       updateSlide();
@@ -1312,7 +1296,19 @@
     else startAutoplay();
   }
 
-  startAutoplay();
+  // 갤러리가 화면에 보일 때만 자동재생 (다른 섹션 볼 땐 멈춤 → 스크롤 안 끌림)
+  const gallerySection = document.querySelector('.slideshow');
+  const galleryObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        if (isAutoplay && !autoplayTimer) startAutoplay();
+      } else {
+        clearInterval(autoplayTimer);
+        autoplayTimer = null;
+      }
+    });
+  }, { threshold: 0.4 });
+  if (gallerySection) galleryObserver.observe(gallerySection);
 
   // 키보드 좌우 화살표 지원
   document.addEventListener('keydown', (e) => {
